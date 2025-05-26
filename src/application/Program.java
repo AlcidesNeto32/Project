@@ -39,18 +39,14 @@ public class Program {
                     }
                     System.out.println("Name of product: ");
                     name = sc.next();
-                    int index = 0;
-                    boolean productTest = false;
                     Product product = null;
                     for (Product p : listProduct) {
-                        if (p.getName().equals(name)) {
-                            product = listProduct.get(index);
-                            productTest = true;
+                        if (p.getName().equalsIgnoreCase(name)) {
+                            product = p;
                             break;
                         }
-                        index++;
                     }
-                    if (productTest) {
+                    if (product != null) {
                         int quantity_toBuy = 0;
                         boolean test_quantity = false;
                         do {
