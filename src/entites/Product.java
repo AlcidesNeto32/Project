@@ -1,5 +1,8 @@
 package entites;
 
+import service.CardPayment;
+
+
 public class Product {
     private String name;
     private int quantity;

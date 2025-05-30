@@ -1,7 +1,7 @@
 package application;
 
 import entites.Product;
-import exception.ProductNotExistException;
+import exception.ProductNotFoundException;
 import service.CardPayment;
 
 import java.util.ArrayList;
@@ -14,6 +14,9 @@ public class Program {
         List<Product> listProduct = new ArrayList<>();
         char confirm = '0';
         String name = null;
+        CardPayment cp = new CardPayment() {
+        };
+        boolean test_everything = false;
 
         do {
             System.out.println("Select a option: ");
@@ -48,21 +51,41 @@ public class Program {
                     }
                     if (product != null) {
                         int quantity_toBuy = 0;
-                        boolean test_quantity = false;
                         do {
                             System.out.println("Quantity: ");
                             quantity_toBuy = sc.nextInt();
                             if (quantity_toBuy > product.getQuantity()) {
                                 System.out.println("This quantity is higher than the amount of inventory!");
-                                test_quantity = true;
+                                test_everything = true;
                             }
-                        } while (test_quantity);
+                        } while (test_everything);
+                        test_everything = false;
                         double value = quantity_toBuy * product.getPrice();
-                        System.out.println("The value is: " + value);
-                        CardPayment.installments(value,4);
+                        System.out.println("The value is: $" + value);
 
+                        System.out.println("What will be the payment method? ");
+                        System.out.println("1.Money");
+                        System.out.println("2.Card of Credit");
+                        System.out.println("3. Card of Debit");
+                        System.out.print("Choice: ");
+                        int choice_payment = sc.nextInt();
+                        switch (choice_payment) {
+                            case 1:
+                                System.out.println("Enter the amount of money to pay: ");
+                                double money_payment = sc.nextDouble();
+                                do {
+                                    if (money_payment < value) {
+                                        System.out.println("[ERROR]: the amount is less than value of payment");
+                                        test_everything = true;
+                                    } else {
+                                        System.out.println("Payment done!");
+                                    }
+                                } while(test_everything == true);
+                                break;
+
+                        }
                     } else {
-                        throw new ProductNotExistException();
+                        throw new ProductNotFoundException();
                     }
                     break;
             }
