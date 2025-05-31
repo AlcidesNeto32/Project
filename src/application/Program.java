@@ -4,19 +4,21 @@ import entites.Product;
 import exception.ProductNotFoundException;
 import service.CardPayment;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Program {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         List<Product> listProduct = new ArrayList<>();
         char confirm = '0';
         String name = null;
-        CardPayment cp = new CardPayment() {
+        CardPayment cardPayment = new CardPayment() {
         };
         boolean test_everything = false;
+        UUID uuid = UUID.randomUUID();
+        Map<UUID, Product> productMap = new HashMap<>();
+        int remainder = 0;
+
 
         do {
             System.out.println("Select a option: ");
@@ -25,14 +27,18 @@ public class Program {
             System.out.println("3. Show all products");
             System.out.println("Choice: ");
             int select = sc.nextInt();
+            sc.nextLine();
             switch (select) {
                 case 1:
                     System.out.println("Product name: ");
-                    name = sc.next();
+                    name = sc.nextLine();
                     System.out.println("Quantity: ");
                     int quantity = sc.nextInt();
                     System.out.println("Product price: ");
                     double price = sc.nextDouble();
+                    String id = uuid.toString();
+                    System.out.println("ID of product: " + id);
+                    productMap.put(UUID.fromString(id), new Product(name, quantity, price));
                     listProduct.add(new Product(name, quantity, price));
                     break;
                 case 2:
@@ -71,23 +77,47 @@ public class Program {
                         int choice_payment = sc.nextInt();
                         switch (choice_payment) {
                             case 1:
-                                System.out.println("Enter the amount of money to pay: ");
-                                double money_payment = sc.nextDouble();
                                 do {
+                                    System.out.println("Enter the amount of money to pay: ");
+                                    double money_payment = sc.nextDouble();
                                     if (money_payment < value) {
                                         System.out.println("[ERROR]: the amount is less than value of payment");
                                         test_everything = true;
                                     } else {
-                                        System.out.println("Payment done!");
+                                        test_everything = false;
                                     }
-                                } while(test_everything == true);
+                                } while (test_everything == true);
+                                System.out.println("Payment done!");
+                                product.setQuantity(product.getQuantity() - quantity_toBuy);
                                 break;
-
+                            case 2:
+                                System.out.println("Attention! In this format there is an extra 3% charge because of the card machine rate");
+                                System.out.println("How many parcel you wish to divide? ");
+                                int parcels = sc.nextInt();
+                                System.out.println("Value of parcel: $" + cardPayment.payment_card(parcels,value));
+                                break;
                         }
                     } else {
                         throw new ProductNotFoundException();
                     }
                     break;
+                case 3:
+                    if (productMap.isEmpty()){
+                        throw new ProductNotFoundException();
+                    }
+                    for (Product pr : listProduct){
+                        int constant = 0;
+                        System.out.println(pr);
+                        for(UUID getId : productMap.keySet()){
+                            if (constant < 1){
+                                System.out.printf("Id: %s%n" , getId);
+                                constant ++;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    System.out.println("This option does not exist! ");
             }
             System.out.println("Do you want continue? Y/N");
             confirm = sc.next().charAt(0);
