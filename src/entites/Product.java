@@ -1,9 +1,10 @@
 package entites;
 
-import service.CardPayment;
 
+import java.util.UUID;
 
 public class Product {
+    private int id;
     private String name;
     private int quantity;
     private double price;
@@ -11,10 +12,11 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, int quantity, double price) {
+    public Product(String name, int quantity, double price,int id) {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
+        this.id = id;
     }
 
     public String getName() {
@@ -41,8 +43,19 @@ public class Product {
         this.price = price;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
-        return "Product: " + getName() + " quantity: " + getQuantity() + " price: " + getPrice();
+        return "Product: " + getName() + "\n" +
+                "quantity: " + getQuantity() + "\n" +
+                "price: " + getPrice() +"\n"+
+                " id:" + getId();
     }
 }
